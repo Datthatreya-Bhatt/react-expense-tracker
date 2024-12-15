@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { useMyContext } from "../context/Context";
+import React  from "react";
+import { useAuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 function Signup() {
+  console.log(useAuthContext(), 'In sigup')
   const {
     email,
     setEmail,
@@ -11,7 +12,7 @@ function Signup() {
     confirmPassword,
     setConfirmPassword,
     url,
-  } = useMyContext();
+  } = useAuthContext();
 
   async function handleSubmit() {
     try {

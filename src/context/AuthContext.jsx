@@ -1,14 +1,15 @@
 import React, { createContext, useState, useContext } from "react";
 
-const Context = createContext();
+const AuthContext = createContext();
 
-const ContextProvider = ({ children }) => {
+const AuthContextProvider = ({ children }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const url = "http://localhost:3000";
   return (
-    <Context.Provider
+    <AuthContext.Provider
       value={{
         email,
         password,
@@ -17,13 +18,15 @@ const ContextProvider = ({ children }) => {
         setPassword,
         setConfirmPassword,
         url,
+        isLoggedIn,
+        setIsLoggedIn,
       }}
     >
       {children}
-    </Context.Provider>
+    </AuthContext.Provider>
   );
 };
 
-const useMyContext = () => useContext(Context);
+const useAuthContext = () => useContext(AuthContext);
 
-export { ContextProvider, useMyContext };
+export { AuthContextProvider, useAuthContext, AuthContext };
