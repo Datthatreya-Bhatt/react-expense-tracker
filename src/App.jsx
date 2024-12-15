@@ -6,16 +6,21 @@ import Signup from "./components/Signup";
 import { AuthContextProvider } from "./context/AuthContext";
 import Login from "./components/Login";
 import Dummy from "./components/Dummy";
+import UpdateProfile from "./components/UpdateProfile";
+import { UserContextProvider } from "./context/UserContext";
 
 function App() {
   return (
-    <AuthContextProvider>
-      <Switch>
-        <Route path="/signup" component={Signup} />
-        <Route path="/login" component={Login} />
-        <Route path="/home" component={Dummy} />
-      </Switch>
-    </AuthContextProvider>
+    <UserContextProvider>
+      <AuthContextProvider>
+        <Switch>
+          <Route path="/signup" component={Signup} />
+          <Route path="/login" component={Login} />
+          <Route path="/home" component={Dummy} />
+          <Route path="/updateProfile" component={UpdateProfile} />
+        </Switch>
+      </AuthContextProvider>
+    </UserContextProvider>
   );
 }
 
