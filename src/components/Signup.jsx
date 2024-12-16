@@ -1,9 +1,9 @@
 import React  from "react";
 import { useAuthContext } from "../context/AuthContext";
 import axios from "axios";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function Signup() {
-  console.log(useAuthContext(), 'In sigup')
   const {
     email,
     setEmail,
@@ -13,6 +13,7 @@ function Signup() {
     setConfirmPassword,
     url,
   } = useAuthContext();
+  const history = useHistory();
 
   async function handleSubmit() {
     try {
@@ -29,12 +30,13 @@ function Signup() {
         }
         if (confirmPassword === password) {
           const res = await axios.post(`${url}/create`, {
-            id: Date.now(),
+            id: `${Date.now()}`,
             email,
             password,
           });
           message = "success";
           console.log("User has successfully signed up.");
+          history.push('/login');
         } else {
           message = "Password does not match with confirmed password.";
         }

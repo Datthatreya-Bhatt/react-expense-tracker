@@ -8,11 +8,14 @@ import Login from "./components/Login";
 import Dummy from "./components/Dummy";
 import UpdateProfile from "./components/UpdateProfile";
 import { UserContextProvider } from "./context/UserContext";
+import Header from "./components/Header";
 
 function App() {
   return (
     <UserContextProvider>
       <AuthContextProvider>
+      <Header/>
+
         <Switch>
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />

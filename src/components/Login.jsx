@@ -29,14 +29,14 @@ const Login = () => {
         return res.data;
       }
 
-      if (res?.data?.length) {
-        const verifyEmailRes = await axios.get(`${url}/verifyEmail`);
-        if (verifyEmailRes?.data?.length) {
+      // if (res?.data?.length) {
+        // const verifyEmailRes = await axios.get(`${url}/verifyEmail`);
+        // if (verifyEmailRes?.data?.length) {
           localStorage.setItem("token", res.data);
           setIsLoggedIn(true);
           history.push("/home");
-        }
-      }
+        // }
+      // }
     } catch (error) {
       console.log(error.message || "something went wrong in login component");
     }
