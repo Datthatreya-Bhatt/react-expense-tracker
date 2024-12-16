@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import axios from "axios";
-import { Redirect, useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  Redirect,
+  useHistory,
+} from "react-router-dom/cjs/react-router-dom.min";
 
 const Login = () => {
   const {
@@ -14,7 +17,6 @@ const Login = () => {
     setIsLoggedIn,
   } = useAuthContext();
   const history = useHistory();
-  
 
   async function handleSubmit() {
     try {
@@ -26,9 +28,15 @@ const Login = () => {
         alert("Failed");
         return res.data;
       }
-      localStorage.setItem("token", res.data);
-      setIsLoggedIn(true);
-      history.push('/home')
+
+      if (res?.data?.length) {
+        const verifyEmailRes = await axios.get(`${url}/verifyEmail`);
+        if (verifyEmailRes?.data?.length) {
+          localStorage.setItem("token", res.data);
+          setIsLoggedIn(true);
+          history.push("/home");
+        }
+      }
     } catch (error) {
       console.log(error.message || "something went wrong in login component");
     }
