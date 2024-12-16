@@ -9,6 +9,7 @@ import Dummy from "./components/Dummy";
 import UpdateProfile from "./components/UpdateProfile";
 import { UserContextProvider } from "./context/UserContext";
 import Header from "./components/Header";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/home" component={Dummy} />
           <Route path="/updateProfile" component={UpdateProfile} />
+          <Route path="/forgotPassword" component={ForgotPassword} />
         </Switch>
       </AuthContextProvider>
     </UserContextProvider>

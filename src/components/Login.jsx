@@ -42,6 +42,11 @@ const Login = () => {
     }
   }
 
+
+  async function forgotPasswordHandler(){
+      history.push('/forgotPassword');
+  }
+
   return (
     <>
       <h4>Email</h4>
@@ -50,7 +55,8 @@ const Login = () => {
       <input type="password" onChange={(e) => setPassword(e.target.value)} />
 
       <br />
-      <button onClick={() => handleSubmit()}>Submit</button>
+      <button onClick={() => handleSubmit()}>Login</button>
+      <button onClick={() => forgotPasswordHandler()}>Forgot password</button>
     </>
   );
 };
