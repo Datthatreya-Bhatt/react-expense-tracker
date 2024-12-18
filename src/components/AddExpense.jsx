@@ -33,9 +33,41 @@ const AddExpense = () => {
     verifyUser();
   }, []);
 
+  useEffect(() => {
+    async function addExpense() {
+      try {
+        let id = localStorage.getItem("token");
+        let res = await axios.post(`${url}/addExpense/${id}`, {
+          expense: expenseEntry,
+        });
+        console.log(res.data, 'This is res in addExpense');
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    addExpense();
+  }, [expenseEntry]);
+
+
+  useEffect(() => {
+    async function getExpense() {
+      try {
+        let id = localStorage.getItem("token");
+        let res = await axios.get(`${url}/getById/${id}`);
+        console.log(res.data[0].expense, 'This is getExpense ')
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    getExpense();
+  }, [expenseEntry]);
+
   async function handleSubmit() {
     try {
-      setExpenseEntry([...expenseEntry, { id: Date.now(), amount, description, category }]);
+      setExpenseEntry([
+        ...expenseEntry,
+        { id: `${Date.now()}`, amount, description, category },
+      ]);
       setAmount("");
       setDescription("");
     } catch (error) {
@@ -45,38 +77,39 @@ const AddExpense = () => {
   return (
     <>
       <h4>Amount</h4>
-      <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)}  />
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
 
       <h4>Description</h4>
-      <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+      <input
+        type="text"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
 
       <h4>Category</h4>
       <select name="Category" onChange={(e) => setCategory(e.target.value)}>
-        <option value="Food" >
-          Food
-        </option>
-        <option value="Petrol" >
-          Petrol
-        </option>
-        <option value="Salary" >
-          Salary
-        </option>
+        <option value="Food">Food</option>
+        <option value="Petrol">Petrol</option>
+        <option value="Salary">Salary</option>
       </select>
 
       <br />
       <button onClick={() => handleSubmit()}>Add</button>
       <div>
         <h5>Entries</h5>
-        {expenseEntry.map((element)=>{
+        {expenseEntry.map((element) => {
           return (
             <div key={element.id}>
               <p>Amount: {element.amount}</p>
               <p>Description: {element.description}</p>
               <p>Category: {element.category}</p>
-
             </div>
-          )
-        })}  
+          );
+        })}
       </div>
     </>
   );
