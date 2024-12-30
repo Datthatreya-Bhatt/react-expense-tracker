@@ -40,7 +40,7 @@ const AddExpense = () => {
         let res = await axios.post(`${url}/addExpense/${id}`, {
           expense: expenseEntry,
         });
-        console.log(res.data, 'This is res in addExpense');
+        console.log(res.data, "This is res in addExpense");
       } catch (error) {
         console.log(error.message);
       }
@@ -48,13 +48,12 @@ const AddExpense = () => {
     addExpense();
   }, [expenseEntry]);
 
-
   useEffect(() => {
     async function getExpense() {
       try {
         let id = localStorage.getItem("token");
         let res = await axios.get(`${url}/getById/${id}`);
-        console.log(res.data[0].expense, 'This is getExpense ')
+        console.log(res.data[0].expense, "This is getExpense ");
       } catch (error) {
         console.log(error.message);
       }
@@ -74,6 +73,28 @@ const AddExpense = () => {
       console.log(error.message);
     }
   }
+
+  async function editHandler(element) {
+    try {
+      let res = await axios.put(`${url}/edit/${element.id}`, {
+        expense: expenseEntry,
+      });
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async function deleteHandler(element) {
+    try {
+      let res = await axios.delete(`${url}/delete`);
+      console.log("Expense deleted successfully");
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
   return (
     <>
       <h4>Amount</h4>
@@ -107,6 +128,8 @@ const AddExpense = () => {
               <p>Amount: {element.amount}</p>
               <p>Description: {element.description}</p>
               <p>Category: {element.category}</p>
+              <button onClick={editHandler(element)}>Edit</button>
+              <button onClick={deleteHandler(element)}>Delete</button>
             </div>
           );
         })}
