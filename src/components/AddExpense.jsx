@@ -17,6 +17,8 @@ const AddExpense = () => {
     setExpenseEntry,
   } = useAddExpenseContext();
   const history = useHistory();
+  const totalExpense = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
 
   useEffect(() => {
     async function verifyUser() {
@@ -120,6 +122,8 @@ const AddExpense = () => {
 
       <br />
       <button onClick={() => handleSubmit()}>Add</button>
+
+      {totalExpense > 10000 && <button>Activate Premium</button>}
       <div>
         <h5>Entries</h5>
         {expenseEntry.map((element) => {
