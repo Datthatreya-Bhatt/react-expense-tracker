@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { useAddExpenseContext } from "../context/AddExpenseContext";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../context/themeSlice"; 
 
 const AddExpense = () => {
   const { url } = useAuthContext();
@@ -17,8 +19,10 @@ const AddExpense = () => {
     setExpenseEntry,
   } = useAddExpenseContext();
   const history = useHistory();
-  const totalExpense = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  const dispatch = useDispatch();
+  const isDarkTheme = useSelector((state) => state.theme.isDarkTheme); 
 
+  const totalExpense = expenseEntry.reduce((sum, expense) => sum + expense.amount, 0);
 
   useEffect(() => {
     async function verifyUser() {
@@ -50,19 +54,6 @@ const AddExpense = () => {
     addExpense();
   }, [expenseEntry]);
 
-  useEffect(() => {
-    async function getExpense() {
-      try {
-        let id = localStorage.getItem("token");
-        let res = await axios.get(`${url}/getById/${id}`);
-        console.log(res.data[0].expense, "This is getExpense ");
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    getExpense();
-  }, [expenseEntry]);
-
   async function handleSubmit() {
     try {
       setExpenseEntry([
@@ -76,29 +67,21 @@ const AddExpense = () => {
     }
   }
 
-  async function editHandler(element) {
-    try {
-      let res = await axios.put(`${url}/edit/${element.id}`, {
-        expense: expenseEntry,
-      });
-    } catch (error) {
-      console.log(error.message);
-      return error.message;
-    }
-  }
+  // Handle CSV download
+  const handleDownload = () => {
+    const csvContent = "Amount,Description,Category\n" + expenseEntry.map((expense) => 
+      `${expense.amount},${expense.description},${expense.category}`).join("\n");
 
-  async function deleteHandler(element) {
-    try {
-      let res = await axios.delete(`${url}/delete`);
-      console.log("Expense deleted successfully");
-    } catch (error) {
-      console.log(error.message);
-      return error.message;
-    }
-  }
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "expenses.csv");
+    link.click();
+  };
 
   return (
-    <>
+    <div className={isDarkTheme ? "dark-theme" : "light-theme"}>
       <h4>Amount</h4>
       <input
         type="text"
@@ -123,7 +106,14 @@ const AddExpense = () => {
       <br />
       <button onClick={() => handleSubmit()}>Add</button>
 
-      {totalExpense > 10000 && <button>Activate Premium</button>}
+      {totalExpense > 10000 && (
+        <button onClick={() => dispatch(toggleTheme())}>Activate Premium</button>
+      )}
+
+      {totalExpense > 10000 && (
+        <button onClick={handleDownload}>Download File</button>
+      )}
+
       <div>
         <h5>Entries</h5>
         {expenseEntry.map((element) => {
@@ -132,13 +122,13 @@ const AddExpense = () => {
               <p>Amount: {element.amount}</p>
               <p>Description: {element.description}</p>
               <p>Category: {element.category}</p>
-              <button onClick={editHandler(element)}>Edit</button>
-              <button onClick={deleteHandler(element)}>Delete</button>
+              <button onClick={() => editHandler(element)}>Edit</button>
+              <button onClick={() => deleteHandler(element)}>Delete</button>
             </div>
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 
